@@ -46,9 +46,49 @@ const userType = new Graphql.GraphQLObjectType({
   }
 });
 
+const queryType = new Graphql.GraphQLObjectType({
+  name: 'Query',
+  fields: {
+    user: {
+      type: userType,
+      args: {
+        id: { type: Graphql.GraphQLInt }
+      },
+      resolve: (post, args, context, info) => {
+        return {
+          message: 'hello'
+        };
+      }
+    },
+
+    allUser: {
+      type: new Graphql.GraphQLList(userType),
+      resolve: (post, args, context, info) => {
+        return [
+          {
+            id: 1,
+            name: 'Daniel'
+          },
+          {
+            id: 2,
+            name: 'Dave'
+          },
+          {
+            id: 3,
+            name: 'Blair'
+          }
+        ];
+      }
+    }
+  }
+});
+
+const schema = new Graphql.GraphQLSchema({ query: queryType });
+
 app.use(
   '/graphql',
   expressGraphql({
+    schema,
     graphiql: true
   })
 );
