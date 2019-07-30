@@ -5,7 +5,7 @@ let ra = 1500; // 플레이어 a의 초기 레이팅
 let rb = 1500; // 플레이어 b의 초기 레이팅
 
 function getKFactor() {
-  return 24; // 체스 ELO에서는  24를 사용한다.
+  return 36 // 체스 ELO에서는  24를 사용한다.
 }
 
 function getWinRate(ra, rb) {
@@ -60,7 +60,7 @@ function game(a, b) {
   );
 }
 
-for (let i = 100; i > 0; i--) {
+for (let i = 10000; i > 0; i--) {
   game(a, b);
 }
 console.log(`Win Counts: a -> ${a.winCount}, b -> ${b.winCount}`);
