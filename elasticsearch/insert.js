@@ -35,7 +35,6 @@ async function run() {
   } else {
     const commands = [];
     for (let i = 100000; i > 0; i--) {
-
       const item = createData();
       commands.push({
         index: {
@@ -64,8 +63,7 @@ async function run() {
 function createData() {
   return {
     socialId: chance.hash(),
-    nickname: chance.first(),
-    gender: chance.pickone(['MALE', 'FEMALE']),
+    male: chance.pickone([true, false]),
     birth: moment(
       chance.date({
         year: chance.integer({ min: 1988, max: 2000 })

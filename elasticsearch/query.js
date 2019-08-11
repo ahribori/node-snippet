@@ -1,14 +1,12 @@
-const Chance = require('chance');
-
 const { Client } = require('@elastic/elasticsearch');
 
 const es = new Client({
-  node: 'http://192.168.0.240:9200',
+  node: 'http://192.168.0.220:9200'
 });
 
 const index = 'user';
 
-async function run() {
+async function search() {
   try {
     console.time('search');
     const searchResult = await es.search({
@@ -17,22 +15,20 @@ async function run() {
         query: {
           function_score: {
             query: {
-              range: {
-                rating: {
-                  gte: 1500,
-                  lte: 1700
-                }
+              match: {
+                gender: 'FEMALE'
               }
             },
             script_score: {
               script: {
-                "params": {
-                  "myRating": 1625,
+                params: {
+                  myRating: 1591
                 },
-                source: "(1000 - Math.abs(doc['rating'].value - params.myRating)) + doc['cash'].value"
+                source:
+                  "10000 - Math.abs(doc['rating'].value - params.myRating) + doc['activity'].value"
               }
             }
-          },
+          }
         }
       }
     });
@@ -40,11 +36,11 @@ async function run() {
     hits.hits.map(hit => {
       console.log(hit._source);
     });
-    console.log(hits)
+    // console.log(hits);
     console.timeEnd('search');
   } catch (e) {
     console.log(e);
   }
 }
 
-run();
+search();
