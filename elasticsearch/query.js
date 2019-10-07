@@ -1,10 +1,10 @@
 const { Client } = require('@elastic/elasticsearch');
 
 const es = new Client({
-  node: 'http://192.168.0.220:9200'
+  node: 'http://192.168.0.180:9200'
 });
 
-const index = 'user';
+const index = 'user-test';
 
 async function search() {
   try {
@@ -13,33 +13,33 @@ async function search() {
       index,
       body: {
         query: {
-          function_score: {
-            query: {
-              match: {
-                gender: 'FEMALE'
-              }
-            },
-            script_score: {
-              script: {
-                params: {
-                  myRating: 1591
-                },
-                source:
-                  "10000 - Math.abs(doc['rating'].value - params.myRating) + doc['activity'].value"
-              }
+          wildcard: {
+            nickname: {
+              value: '*daniel*',
+              boost: 1.0,
+              rewrite: 'constant_score'
             }
           }
         }
       }
     });
     const { hits } = searchResult.body;
+    let kql = null;
     hits.hits.map(hit => {
-      console.log(hit._source);
+      const { _source } = hit;
+      const { nickname, rating, activity } = _source;
+      console.log([nickname, rating, activity]);
+      if (!kql) {
+        kql = `_id: "${hit._id}"`;
+      } else {
+        kql += ` or _id: "${hit._id}"`;
+      }
     });
-    // console.log(hits);
+    console.log(JSON.stringify(hits.hits.map(h => h._score.toFixed(0))));
     console.timeEnd('search');
+    console.log(kql);
   } catch (e) {
-    console.log(e);
+    console.log(e.meta.body.error.reason);
   }
 }
 
