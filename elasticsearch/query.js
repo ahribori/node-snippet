@@ -13,12 +13,18 @@ async function search() {
       index,
       body: {
         query: {
-          wildcard: {
-            nickname: {
-              value: '*daniel*',
-              boost: 1.0,
-              rewrite: 'constant_score'
-            }
+          bool: {
+            must: [
+              {
+                wildcard: {
+                  nickname: {
+                    value: '*dani*',
+                    boost: 1.0,
+                    rewrite: 'constant_score'
+                  }
+                }
+              }
+            ]
           }
         }
       }
