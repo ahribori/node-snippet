@@ -15,6 +15,7 @@
     "chance": "^1.0.18",
     "express": "^4.17.1",
     "express-graphql": "^0.8.0",
+    "firebase-functions": "^3.6.1",
     "geolib": "^3.0.4",
     "graphql": "^14.3.1",
     "ioredis": "^4.14.0",
